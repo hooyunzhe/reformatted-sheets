@@ -1,2 +1,3 @@
 # reformatted-sheets
-Simple CSV to XLSX formatter
+A simple Python program to convert and format CSV files into XLSX files </br>
+**_\*work in progress\*_**
