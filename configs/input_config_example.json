@@ -1,0 +1,29 @@
+[
+	{
+		"filename": "example.csv",
+		"columns":
+		[
+			{
+				"from": "Order Date",
+				"name": "Order Date",
+				"format": "%Y/%m/%d"
+			},
+			{
+				"from": "Product Name",
+				"name": "Product Name"
+			},
+			{
+				"from": "SKU",
+				"name": "SKU"
+			},
+			{
+				"from": "QTY",
+				"name": "QTY"
+			},
+			{
+				"from": "Price",
+				"name": "Price"
+			}
+		]
+	}
+]

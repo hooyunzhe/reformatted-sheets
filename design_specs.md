@@ -1,7 +1,7 @@
 # reformatted-sheets
 
 ## Usage
-- `python3 reformatted-sheets.py [input_config] [output_config]`
+- `python3 reformatted_sheets.py [input_config] [output_config]`
 - looks for config files in `configs`
 
 ## Config | input
@@ -13,9 +13,8 @@
 - `array of`
 	- `"filename": name of input file`
 	- `"columns": array of`
+		- `"from": column to use`
 		- `"name": name of column`
-		- `"type": type of column`
-			- `number|string|date|phone`
 		- `"format": format of column`
 			- `applicable for date|phone`
 
