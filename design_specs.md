@@ -7,7 +7,7 @@
 ## Config | input
 - specifies filenames of input files
 	- looks for input files in `input_files`
-- designates column types
+- specifies column info
 
 ### Syntax
 - `array of`

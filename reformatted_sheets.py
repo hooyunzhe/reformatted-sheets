@@ -3,12 +3,15 @@ from srcs import error_handling
 from srcs import input_handling
 
 def main(args):
+	# set up error handling
+	error_handler = error_handling.ErrorHandler("")
+
 	# make sure both configs are provided
 	if len(args) != 2:
-		error_handling.handle_error("InvalidArguments")
+		error_handler.handle_error("InvalidArguments")
 
 	# read input data
-	input_data = input_handling.read_input_files(args[0])
+	input_data = input_handling.read_input_files(args[0], error_handler)
 
 	print(input_data)
 	print(input_data.dtypes)
