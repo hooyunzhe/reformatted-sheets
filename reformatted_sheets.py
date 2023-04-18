@@ -1,21 +1,25 @@
 import sys
-from srcs import error_handling
-from srcs import input_handling
+from srcs.exceptions import UsageError, InputConfigError
+from srcs.input_handler import InputHandler
 
-def main(args):
-	# set up error handling
-	error_handler = error_handling.ErrorHandler("")
+def main(args: list[str]) -> None:
+	"""Create SheetReformatter instance and call their methods"""
 
 	# make sure both configs are provided
 	if len(args) != 2:
-		error_handler.handle_error("InvalidArguments")
+		raise UsageError(len(args))
 
-	# read input data
-	input_data = input_handling.read_input_files(args[0], error_handler)
+	test = InputHandler(args[0])
+	test.read_config_file()
 
-	print(input_data)
-	print(input_data.dtypes)
+	print(test.read_input_files())
+
 
 # call main if ran directly and not by import
 if __name__ == "__main__":
-	main(sys.argv[1:])
+	# handle exceptions
+	try:
+		main(sys.argv[1:])
+	except (UsageError, InputConfigError) as error:
+		print(error)
+		sys.exit(1)
