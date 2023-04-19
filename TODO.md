@@ -1,6 +1,8 @@
 # TODO
-- Create SheetReformatter class
-- Create OutputHandler class
+- Implement more of OutputHandler class
+- Update SheetReformatter class
+- ~~Create SheetReformatter class~~
+- ~~Create OutputHandler class~~
 
 ## Error Handling
 ### Config | input

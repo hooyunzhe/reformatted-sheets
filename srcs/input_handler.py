@@ -5,7 +5,7 @@ import pandas as pd
 from .exceptions import InputConfigError
 
 class InputHandler():
-	"""Parse input config and read input files"""
+	"""Parse config and read input files"""
 
 	def __init__(self, config_filename: str) -> None:
 		"""Save the config filename"""
@@ -31,7 +31,7 @@ class InputHandler():
 			try:
 				self.config = json.load(config_file)
 			except ValueError as error:
-				raise InputConfigError("InvalidConfig", self.config_filename)
+				raise InputConfigError("InvalidConfig", self.config_filename, str(error))
 
 
 	def read_input_files(self) -> pd.DataFrame:

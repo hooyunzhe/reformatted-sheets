@@ -12,7 +12,7 @@ class UsageError(Exception):
 		message = "not enough arguments" if arg_len < 2 else "too many arguments"
 
 		# send error message and usage info to Exception
-		usage = "\nusage: python3 reformatted_sheets.py [input_config] [output_config]"
+		usage = "\n            python3 reformatted_sheets.py [input_config] [output_config]"
 		super().__init__("UsageError: " + message + usage)
 
 
@@ -43,7 +43,8 @@ class InputConfigError(Exception):
 			message = "columns " + args[1] + " cannot be found in \"" + args[0] + "\""
 
 		if error == "InvalidConfig":
-			message = "file \"" + args[0] + "\" contains invalid syntax"
+			message = "file \"" + args[0] + "\" contains invalid syntax\n"
+			message += "                  " + args[1][0].lower() + args[1][1:]
 
 		if error == "InvalidFormat":
 			message = "column '" + args[1] + "' in \"" + args[0] + "\" has "
@@ -52,3 +53,33 @@ class InputConfigError(Exception):
 			message = message.replace(",", "")
 
 		super().__init__("InputConfigError: " + message)
+
+
+class OutputConfigError(Exception):
+	"""When an error is found in the output config"""
+
+	def __init__(self, error: str, *args: str) -> None:
+		"""Determine appropriate message based on the error
+
+		Args:
+			error: The type of the error
+			*args: Extra arguments for the message
+		"""
+
+		# get the corresponding message and send to Exception
+		message = ""
+
+		if error == "FileNotFound":
+			message = "file \"" + args[0] + "\" cannot be found in \"configs\" folder"
+
+		if error == "ColumnNotFound":
+			message = "column " + args[1][1:-1] + " cannot be found in \"" + args[0] + "\""
+
+		if error == "ColumnsNotFound":
+			message = "columns " + args[1] + " cannot be found in \"" + args[0] + "\""
+
+		if error == "InvalidConfig":
+			message = "file \"" + args[0] + "\" contains invalid syntax\n"
+			message += "                   " + args[1][0].lower() + args[1][1:]
+
+		super().__init__("OutputConfigError: " + message)
