@@ -18,20 +18,39 @@ class InputHandler():
 
 		Raises:
 			InputConfigError:
-				"FileNotFound": the file cannot be found
-				"InvalidConfig": the syntax is invalid
+				"ConfigFileNotFound": the config file cannot be found
+				"InvalidSyntax": the syntax is invalid
+				"MissingInputFile": missing input file info
+				"MissingKey": missing required keys
 		"""
 
 		# make sure config file exists
 		if not os.path.isfile("configs/" + self.config_filename):
-			raise InputConfigError("FileNotFound", self.config_filename)
+			raise InputConfigError("ConfigFileNotFound", self.config_filename)
 
 		# read and parse the config
 		with open("configs/" + self.config_filename) as config_file:
 			try:
 				self.config = json.load(config_file)
 			except ValueError as error:
-				raise InputConfigError("InvalidConfig", self.config_filename, str(error))
+				raise InputConfigError("InvalidSyntax", self.config_filename, str(error))
+
+		# handle single input file in config
+		if type(self.config) == dict:
+			self.config = [self.config]
+
+		# make sure the config isn't empty
+		if not self.config:
+			raise InputConfigError("MissingInputFile", self.config_filename)
+
+		# make sure required keys exist
+		missing_keys = []
+		for input_file in self.config:
+			missing_keys.extend([key for key in ["filename", "columns"] if key not in input_file])
+			if "columns" in input_file:
+				missing_keys.extend([key for key in ["from", "name"] for col in input_file["columns"] if key not in col])
+		if missing_keys:
+			raise InputConfigError("MissingKey", self.config_filename, str(missing_keys))
 
 
 	def read_input_files(self) -> pd.DataFrame:
@@ -43,8 +62,7 @@ class InputHandler():
 		Raises:
 			InputConfigError:
 				"InputFileNotFound": the input file cannot be found
-				"ColumnNotFound": a column cannot be found
-				"ColumnsNotFound": more than one column cannot be found
+				"ColumnNotFound": the specified columns cannot be found
 				"InvalidFormat": a column contains data that doesn't match the specified format
 		"""
 
@@ -64,10 +82,8 @@ class InputHandler():
 
 			# make sure specified columns exist and remove the rest
 			columns_not_found = [col for col in columns if col not in new_data.columns]
-			if len(columns_not_found) == 1:
+			if len(columns_not_found):
 				raise InputConfigError("ColumnNotFound", input_file["filename"], str(columns_not_found))
-			if len(columns_not_found) > 1:
-				raise InputConfigError("ColumnsNotFound", input_file["filename"], str(columns_not_found))
 			new_data = new_data[columns]
 
 			# rename columns

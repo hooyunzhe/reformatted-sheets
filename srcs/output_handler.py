@@ -18,16 +18,16 @@ class OutputHandler():
 
 		Raises:
 			OutputConfigError:
-				"FileNotFound": the file cannot be found
-				"InvalidConfig": the syntax is invalid
+				"ConfigFileNotFound": the file cannot be found
+				"InvalidSyntax": the syntax is invalid
 		"""
 
 		# make sure config file exists
 		if not os.path.isfile("configs/" + self.config_filename):
-			raise OutputConfigError("FileNotFound", self.config_filename)
+			raise OutputConfigError("ConfigFileNotFound", self.config_filename)
 
 		with open("configs/" + self.config_filename) as config_file:
 			try:
 				self.config = json.load(config_file)
 			except ValueError as error:
-				raise OutputConfigError("InvalidConfig", self.config_filename, str(error))
+				raise OutputConfigError("InvalidSyntax", self.config_filename, str(error))

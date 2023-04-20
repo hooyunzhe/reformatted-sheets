@@ -4,9 +4,13 @@
 - ~~Create SheetReformatter class~~
 - ~~Create OutputHandler class~~
 
-## Error Handling
-### Config | input
-- Any missing keywords
+## Config | input
+- Handle `columns` as an array of
+	- short syntax: `"name_of_column"`
+	- long syntax: `{from, [name], [format]}`
+- Update exceptions accordingly
+### Error Handling
+- ~~Any missing keywords~~
 - ~~Non-existent config file provided~~
 - ~~Non-existent file specified in `filename`~~
 - ~~Non-existent columns specified in `from`~~
