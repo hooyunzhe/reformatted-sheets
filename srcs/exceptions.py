@@ -37,13 +37,16 @@ class InputConfigError(Exception):
 			message = "config file \"" + args[0] + "\" contains invalid syntax\n"
 			message += "                  " + args[1][0].lower() + args[1][1:]
 
-		if error == "MissingInputFile":
+		if error == "MissingInputFileInfo":
 			message = "missing input file info in \"" + args[0] + "\""
 
 		if error == "MissingKey":
 			message = "missing "
 			message += "keys " + args[1] if ',' in args[1] else "key " + args[1][1:-1]
 			message += " in \"" + args[0] + "\""
+
+		if error == "MissingColumnInfo":
+			message = "missing column info in \"" + args[0] + "\""
 
 		if error == "InputFileNotFound":
 			message = "input file \"" + args[0] + "\" cannot be found in \"input_files\" folder"
@@ -81,6 +84,20 @@ class OutputConfigError(Exception):
 		if error == "InvalidSyntax":
 			message = "config file \"" + args[0] + "\" contains invalid syntax\n"
 			message += "                   " + args[1][0].lower() + args[1][1:]
+
+		if error == "MissingOutputFileInfo":
+			message = "missing output file info in \"" + args[0] + "\""
+
+		if error == "MissingKey":
+			message = "missing "
+			message += "keys " + args[1] if "," in args[1] else "key " + args[1][1:-1]
+			message += " in \"" + args[0] + "\""
+
+		if error == "MissingSheetInfo":
+			message = "missing sheet info in \"" + args[0] + "\""
+
+		if error == "MissingColumnInfo":
+			message = "missing column info in \"" + args[0] + "\""
 
 		if error == "ColumnNotFound":
 			message = "columns " + args[1] if ',' in args[1] else "column " + args[1][1:-1]

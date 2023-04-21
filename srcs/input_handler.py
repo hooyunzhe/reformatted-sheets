@@ -20,8 +20,9 @@ class InputHandler():
 			InputConfigError:
 				"ConfigFileNotFound": the config file cannot be found
 				"InvalidSyntax": the syntax is invalid
-				"MissingInputFile": missing input file info
-				"MissingKey": missing required keys
+				"MissingInputFileInfo": the input file section is empty
+				"MissingColumnInfo": the column section is empty
+				"MissingKey": the required keys are missing
 		"""
 
 		# make sure config file exists
@@ -41,14 +42,19 @@ class InputHandler():
 
 		# make sure the config isn't empty
 		if not self.config:
-			raise InputConfigError("MissingInputFile", self.config_filename)
+			raise InputConfigError("MissingInputFileInfo", self.config_filename)
 
 		# make sure required keys exist
 		missing_keys = []
 		for input_file in self.config:
 			missing_keys.extend([key for key in ["filename", "columns"] if key not in input_file])
 			if "columns" in input_file:
+				# make sure the columns aren't empty
+				if not input_file["columns"]:
+					raise InputConfigError("MissingColumnInfo", self.config_filename)
 				missing_keys.extend([key for key in ["from", "name"] for col in input_file["columns"] if key not in col])
+
+		# raise exception if there are keys missing
 		if missing_keys:
 			raise InputConfigError("MissingKey", self.config_filename, str(missing_keys))
 
