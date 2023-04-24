@@ -61,6 +61,12 @@ class InputConfigError(Exception):
 			message += args[2][args[2].find("doesn't"):args[2].find('.')]
 			message = message.replace(",", "")
 
+		if error == "JoinColumnNotFound":
+			message = "'join_on' column '" + args[1] + "' cannot be found in data from \"" + args[0] + "\""
+
+		if error == "InvalidJoinColumn":
+			message = "'join_on' column '" + args[1] + "' from \"" + args[0] + "\" doesn't match any existing columns"
+
 		super().__init__("InputConfigError: " + message)
 
 

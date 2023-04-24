@@ -1,29 +1,27 @@
 [
 	{
-		"filename": "example.csv",
+		"filename": "example_one.csv",
 		"columns":
 		[
-			{
-				"from": "Order Date",
-				"name": "Order Date",
-				"format": "%Y/%m/%d"
-			},
-			{
-				"from": "Product Name",
-				"name": "Product Name"
-			},
-			{
-				"from": "SKU",
-				"name": "SKU"
-			},
-			{
-				"from": "QTY",
-				"name": "QTY"
-			},
-			{
-				"from": "Price",
-				"name": "Price"
-			}
+			{ "name": "Order Date", "from": "Order Date", "format": "%Y/%m/%d" },
+			"SKU",
+			"QTY",
+			{ "name": "Origin", "value": "example_one.csv"}
 		]
+	},
+	{
+		"filename": "example_two.csv",
+		"columns":
+		[
+			{ "name": "Order Date", "from": "Date of Order", "format": "%Y/%m/%d" },
+			{ "name": "SKU", "from": "SKU Number" },
+			{ "name": "QTY", "from": "Quantity"},
+			{ "name": "Origin", "value": "example_two.csv"}
+		]
+	},
+	{
+		"filename": "example_join.csv",
+		"join_on": "SKU",
+		"columns": [ "SKU", "Product Name", "Price" ]
 	}
 ]

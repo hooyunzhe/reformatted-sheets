@@ -3,25 +3,12 @@
 		"filename": "example",
 		"sheets":
 		[
-			{
-				"name": "example_sheet_1",
-				"title": "example_title_1",
-				"type": "sheet",
-				"range_begin": [2023, 1, 1],
-				"range_end": [2023, 6, 30],
+			{	"name": "example_sheet_1", "title": "example_title_1", "type": "sheet",
+				"range_begin": [2023, 1, 1], "range_end": [2023, 6, 30],
 				"columns":
 				[
-					{
-						"from": "Order Date",
-						"name": "Date",
-						"type": "column",
-						"format": "day"
-					},
-					{
-						"from": "QTY",
-						"name": "Amount",
-						"type": "column"
-					}
+					{ "from": "Order Date", "name": "Date", "type": "column", "format": "day" },
+					{ "from": "QTY", "name": "Amount", "type": "column" }
 				]
 			}
 		]

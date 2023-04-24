@@ -1,7 +1,7 @@
 import os
 import json
 import pandas as pd
-
+from functools import reduce
 from .exceptions import InputConfigError
 
 class InputHandler():
@@ -45,14 +45,18 @@ class InputHandler():
 			raise InputConfigError("MissingInputFileInfo", self.config_filename)
 
 		# make sure required keys exist
-		missing_keys = []
+		missing_keys = set()
 		for input_file in self.config:
-			missing_keys.extend([key for key in ["filename", "columns"] if key not in input_file])
+			missing_keys.update({"filename", "columns"}.difference(input_file))
 			if "columns" in input_file:
 				# make sure the columns aren't empty
 				if not input_file["columns"]:
 					raise InputConfigError("MissingColumnInfo", self.config_filename)
-				missing_keys.extend([key for key in ["from", "name"] for col in input_file["columns"] if key not in col])
+
+				# make sure required keys exist in columns of long syntax
+				columns = [col for col in input_file["columns"] if type(col) == dict]
+				missing_keys.update({"name" for col in columns if "name" not in col})
+				missing_keys.update({"from / value" for col in columns if not {"from", "value"}.intersection(col)})
 
 		# raise exception if there are keys missing
 		if missing_keys:
@@ -70,18 +74,36 @@ class InputHandler():
 				"InputFileNotFound": the input file cannot be found
 				"ColumnNotFound": the specified columns cannot be found
 				"InvalidFormat": a column contains data that doesn't match the specified format
+				"JoinColumnNotFound": the join_on column cannot be found
+				"InvalidJoinColumn": the join_on column doesn't match any other columns
 		"""
 
+		# read, manipulate and save data from each input file
 		data = []
+		join_data = []
 		for input_file in self.config:
 			# get file path and make sure it exists
 			input_path = "input_files/" + input_file["filename"]
 			if not os.path.isfile(input_path):
 				raise InputConfigError("InputFileNotFound", input_file["filename"])
 
-			# get info of each input file from config
-			columns = [col["from"] for col in input_file["columns"]]
-			renames = {col["from"]: col["name"] for col in input_file["columns"] if col["from"] != col["name"]}
+			# get info of the columns from config
+			columns = []
+			new_columns = {}
+			renames = {}
+			for column in input_file["columns"]:
+				# short syntax: just the name of the column to use
+				if type(column) == str:
+					columns.append(column)
+
+				# long syntax: custom name and either column to use or custom value
+				if type(column) == dict:
+					if "from" in column:
+						columns.append(column["from"])
+						if column["name"] != column["from"]:
+							renames[column["from"]] = column["name"]
+					elif "value" in column:
+						new_columns[column["name"]] = column["value"]
 
 			# read data from input file
 			new_data = pd.read_csv(input_path)
@@ -93,18 +115,32 @@ class InputHandler():
 			new_data = new_data[columns]
 
 			# rename columns
-			new_data.rename(columns = renames, inplace = True)
+			new_data.rename(columns=renames, inplace=True)
 
 			# convert date columns based on given format
 			for col in input_file["columns"]:
-				if col.get("format"):
+				if type(col) == dict and "format" in col:
 					try:
-						new_data[col["name"]] = pd.to_datetime(new_data[col["name"]], format = col["format"])
+						new_data[col["name"]] = pd.to_datetime(new_data[col["name"]], format=col["format"])
 					except ValueError as error:
 						raise InputConfigError("InvalidFormat", input_file["filename"], col["from"], str(error))
 
-			# add data to array
-			data.append(new_data)
+			# add new columns with their values
+			new_data = new_data.assign(**new_columns)
 
-		# combine data from all files to one dataframe
-		return (pd.concat(data))
+			# add data to appropriate array
+			if "join_on" in input_file:
+				# make sure the column exists
+				if input_file["join_on"] not in new_data.columns:
+					raise InputConfigError("JoinColumnNotFound", input_file["filename"], input_file["join_on"])
+				join_data.append((new_data, input_file["join_on"], input_file["filename"]))
+			else:
+				data.append(new_data)
+
+		# combine and join data from all files to one dataframe
+		all_data = pd.concat(data)
+		for join in join_data:
+			if join[1] not in all_data.columns:
+				raise InputConfigError("InvalidJoinColumn", join[2], join[1])
+			all_data = all_data.merge(join[0], on=join[1], how="left")
+		return (all_data)
