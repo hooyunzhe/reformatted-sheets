@@ -82,8 +82,8 @@ class OutputHandler():
                                          if key not in sheet])
                     if "columns" in sheet:
                         # make sure the columns aren't empty
-                        if (not sheet["columns"]
-                           or type(sheet["columns"]) is dict):
+                        if not (type(sheet["columns"]) is list
+                                and sheet["columns"]):
                             raise OutputConfigError("MissingColumnInfo",
                                                     self.config_filename)
                         missing_keys.extend([key for key in

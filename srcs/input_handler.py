@@ -60,22 +60,25 @@ class InputHandler():
                                    self.config_filename)
 
         # make sure required keys exist
-        missing_keys = set()
+        missing_keys = []
         for input_file in self.config:
-            missing_keys.update({"filename", "columns"}.difference(input_file))
+            missing_keys.extend([key for key in ["filename", "columns"]
+                                 if key not in input_file])
             if "columns" in input_file:
                 # make sure the columns aren't empty
-                if not input_file["columns"]:
+                if not (type(input_file["columns"]) is list
+                        and input_file["columns"]):
                     raise InputConfigError("MissingColumnInfo",
                                            self.config_filename)
 
                 # make sure required keys exist in columns of long syntax
                 columns = [col for col in input_file["columns"]
                            if type(col) is dict]
-                missing_keys.update({"name" for col in columns
-                                    if "name" not in col})
-                missing_keys.update({"from / value" for col in columns if not
-                                    {"from", "value"}.intersection(col)})
+                missing_keys.extend(["name" for col in columns
+                                    if "name" not in col])
+                missing_keys.extend(["from / value" for col in columns
+                                     if "from" not in col
+                                     and "value" not in col])
 
         # raise exception if there are keys missing
         if missing_keys:
