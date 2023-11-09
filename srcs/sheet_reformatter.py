@@ -45,3 +45,4 @@ class SheetReformatter():
         """Format data into sheets"""
 
         self.output_handler.read_config_file()
+        self.output_handler.generate_output_files(self.data)

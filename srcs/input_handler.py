@@ -11,6 +11,14 @@ class InputHandler():
     Methods:
         read_config_file() -> None:
             read and parse the config file
+        read_input_files() -> pd.DataFrame:
+            get data from input files and manipulate based on config
+
+    Attributes:
+        config (array of objects):
+            config objects of the input files
+        config_filename (str):
+            name of the config file
 
     """
 
@@ -90,7 +98,7 @@ class InputHandler():
         Get data from input files and manipulate based on config
 
         Returns:
-            the dataframe containing data from all input files
+            dataframe containing data from all input files
 
         Raises:
             InputConfigError:

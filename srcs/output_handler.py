@@ -95,3 +95,22 @@ class OutputHandler():
         if missing_keys:
             raise OutputConfigError("MissingKey",
                                     self.config_filename, str(missing_keys))
+
+    def generate_output_files(self, data: pd.DataFrame) -> None:
+        """
+        Format data based on config and generate output files
+
+        Arguments:
+            data (pd.DataFrame):
+                dataframe containing data to generate output from
+        """
+
+        print(data)
+
+        # format data and generate output for each output file
+        for output_file in self.config:
+
+            # format and save data in a dataframe for each sheet
+            for sheet in output_file["sheets"]:
+                with pd.ExcelWriter("output_files/test.xlsx") as writer:
+                    data.to_excel(writer, sheet_name="test_sheet")
