@@ -7,8 +7,21 @@
 				"range_begin": [2023, 1, 1], "range_end": [2023, 6, 30],
 				"columns":
 				[
-					{ "from": "Order Date", "name": "Date", "type": "column", "format": "day" },
-					{ "from": "QTY", "name": "Amount", "type": "column" }
+					{ "name": "Date", "from": "Order Date", "format": "day" },
+					{ "name": "Amount", "from": "QTY" },
+					{ "name": "Sheet", "value": "Example Sheet One" }
+				]
+			},
+			{	"name": "example_sheet_2", "title": "example_title_2", "type": "sheet",
+				"range_begin": [2023, 1, 1], "range_end": [2023, 6, 30],
+				"columns":
+				[
+					{ "name": "Date", "from": "Order Date", "format": "month" },
+					{ "name": "SKU", "from": "SKU" },
+					{ "name": "Product Name", "from": "Product Name" },
+					{ "name": "Price", "from": "Price" },
+					{ "name": "Amount", "from": "QTY" },
+					{ "name": "Sheet", "value": "Example Sheet Two" }
 				]
 			}
 		]

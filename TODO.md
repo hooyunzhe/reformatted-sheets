@@ -1,6 +1,7 @@
 # TODO
-- Implement more of OutputHandler class
-- Update SheetReformatter class
+- Implement `range_begin` and `range_end`
+- Implement sheet type `pivot` and column types `column/value`
+- Implement title and related formatting
 - ~~Create SheetReformatter class~~
 - ~~Create OutputHandler class~~
 

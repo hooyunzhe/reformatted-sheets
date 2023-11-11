@@ -86,10 +86,15 @@ class OutputHandler():
                                 and sheet["columns"]):
                             raise OutputConfigError("MissingColumnInfo",
                                                     self.config_filename)
-                        missing_keys.extend([key for key in
-                                             ["from", "name", "type"]
+
+                        # make sure required keys exist in columns
+                        missing_keys.extend(["name"
                                              for col in sheet["columns"]
-                                             if key not in col])
+                                             if "name" not in col])
+                        missing_keys.extend(["from / value"
+                                            for col in sheet["columns"]
+                                            if "from" not in col
+                                            and "value" not in col])
 
         # raise exception if there are keys missing
         if missing_keys:
@@ -129,7 +134,10 @@ class OutputHandler():
         sheet_df = pd.DataFrame()
 
         for column in sheet["columns"]:
-            sheet_df[column["name"]] = data_df[column["from"]]
+            if "from" in column:
+                sheet_df[column["name"]] = data_df[column["from"]]
+            elif "value" in column:
+                sheet_df[column["name"]] = column["value"]
 
         return sheet_df
 

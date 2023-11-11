@@ -79,14 +79,14 @@ class InputHandler():
                     raise InputConfigError("MissingColumnInfo",
                                            self.config_filename)
 
-                # make sure required keys exist in columns of long syntax
-                columns = [col for col in input_file["columns"]
-                           if type(col) is dict]
-                missing_keys.extend(["name" for col in columns
+                # make sure required keys exist in columns
+                missing_keys.extend(["name"
+                                    for col in input_file["columns"]
                                     if "name" not in col])
-                missing_keys.extend(["from / value" for col in columns
-                                     if "from" not in col
-                                     and "value" not in col])
+                missing_keys.extend(["from / value"
+                                    for col in input_file["columns"]
+                                    if "from" not in col
+                                    and "value" not in col])
 
         # raise exception if there are keys missing
         if missing_keys:
@@ -126,12 +126,7 @@ class InputHandler():
             new_columns = {}
             renames = {}
             for column in input_file["columns"]:
-                # short syntax: just the name of the column to use
-                if type(column) is str:
-                    columns.append(column)
-
-                # long syntax: custom name and
-                #              either column to use or custom value
+                # custom name and either column to use or custom value
                 if type(column) is dict:
                     if "from" in column:
                         columns.append(column["from"])

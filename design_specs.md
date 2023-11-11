@@ -14,14 +14,12 @@
 	- `"filename": name of input file`
 	- `"join_on" (optional): column to join data on`
 	- `"columns": array of`
-		- `short syntax: column to use`
-		- `long syntax: object of`
-			- `"name": name of column`
-			- `either:`
-				- `"from": column to use`
-				- `"value": custome value of column`
-			- `"format": format of column`
-				- `applicable for date|phone`
+		- `"name": name of column`
+		- `either:`
+			- `"from": column to use`
+			- `"value": custom value of column`
+		- `"format": format of column`
+			- `applicable for date|phone`
 
 ## Config | output
 - specifies filenames of output files
@@ -42,14 +40,12 @@
 		- `"range_end": date to end in sheet`
 			- `[[year], [month], [day]]`
 		- `"columns": array of`
-			- `short syntax: column to use`
-			- `long syntax: object of`
-				- `"name": name of column`
-				- `either:`
-					- `"from": column to use`
-					- `"value": custome value of column`
-				- `"type": type of column`
-					- `column|value`
-				- `"format": format of column`
-					- `number-word|string-title|date-month|phone-full"`
+			- `"name": name of column`
+			- `either:`
+				- `"from": column to use`
+				- `"value": custom value of column`
+			- `"type": type of column`
+				- `column|value`
+			- `"format": format of column`
+				- `number-word|string-title|date-month|phone-full"`
 
