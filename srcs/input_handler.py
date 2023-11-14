@@ -43,6 +43,7 @@ class InputHandler():
                 "InvalidSyntax": the syntax is invalid
                 "MissingInputFileInfo": the input file section is empty
                 "MissingColumnInfo": the column section is empty
+                "InvalidColumnInfo": the column section contains invalid values
                 "MissingKey": the required keys are missing
         """
 
@@ -80,13 +81,15 @@ class InputHandler():
                                            self.config_filename)
 
                 # make sure required keys exist in columns
-                missing_keys.extend(["name"
-                                    for col in input_file["columns"]
-                                    if "name" not in col])
-                missing_keys.extend(["from / value"
-                                    for col in input_file["columns"]
-                                    if "from" not in col
-                                    and "value" not in col])
+                for column in input_file["columns"]:
+                    if type(column) is dict:
+                        if "name" not in column:
+                            missing_keys.append("name")
+                        elif "from" not in column and "value" not in column:
+                            missing_keys.append("from / value")
+                    else:
+                        raise InputConfigError("InvalidColumnInfo",
+                                               self.config_filename)
 
         # raise exception if there are keys missing
         if missing_keys:

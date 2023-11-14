@@ -11,6 +11,14 @@ class OutputHandler():
     Methods:
         read_config_file() -> None:
             read and parse the config file
+        generate_output_files(data_df: pd.DataFrame) -> None:
+            format data based on config and generate output files
+
+    Attributes:
+        config (array of objects):
+            config objects of the output files
+        config_filename (str):
+            name of the config file
     """
 
     def __init__(self, config_filename: str) -> None:
@@ -35,6 +43,7 @@ class OutputHandler():
                 "MissingOutputFileInfo": the output file section is empty
                 "MissingSheetInfo": the sheet section is empty
                 "MissingColumnInfo": the column section is empty
+                "InvalidColumnInfo": the column section contains invalid values
                 "MissingKey": the required keys are missing
         """
 
@@ -88,13 +97,16 @@ class OutputHandler():
                                                     self.config_filename)
 
                         # make sure required keys exist in columns
-                        missing_keys.extend(["name"
-                                             for col in sheet["columns"]
-                                             if "name" not in col])
-                        missing_keys.extend(["from / value"
-                                            for col in sheet["columns"]
-                                            if "from" not in col
-                                            and "value" not in col])
+                        for column in sheet["columns"]:
+                            if type(column) is dict:
+                                if "name" not in column:
+                                    missing_keys.append("name")
+                                elif ("from" not in column
+                                      and "value" not in column):
+                                    missing_keys.append("from / value")
+                            else:
+                                raise OutputConfigError("InvalidColumnInfo",
+                                                        self.config_filename)
 
         # raise exception if there are keys missing
         if missing_keys:
@@ -148,6 +160,10 @@ class OutputHandler():
         Arguments:
             data_df (pd.DataFrame):
                 dataframe containing data to generate output from
+
+        Raises:
+            OutputConfigError:
+                "ColumnNotFound": the specified columns cannot be found
         """
 
         print(data_df)
@@ -157,6 +173,18 @@ class OutputHandler():
 
         # format data and generate output for each output file
         for output_file in self.config:
+            # make sure specified columns exist in the data
+            for sheet in output_file["sheets"]:
+                columns_not_found = [col["from"]
+                                     for col in sheet["columns"]
+                                     if "from" in col
+                                     and col["from"] not in data_df]
+                if len(columns_not_found):
+                    raise OutputConfigError("ColumnNotFound",
+                                            output_file["filename"],
+                                            sheet["name"],
+                                            str(columns_not_found))
+
             # get path and open file for writing
             output_path = self.generate_output_path(output_file["filename"])
             with pd.ExcelWriter(output_path) as writer:

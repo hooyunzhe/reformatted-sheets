@@ -44,14 +44,17 @@ class InputConfigError(Exception):
         if error == "MissingInputFileInfo":
             message = f'missing input file info in "{args[0]}"'
 
+        if error == "MissingColumnInfo":
+            message = f'missing column info in "{args[0]}"'
+
+        if error == "InvalidColumnInfo":
+            message = f'invalid column info in "{args[0]}"'
+
         if error == "MissingKey":
             message = "missing "
             message += ("keys " + args[1] if "," in args[1]
                         else "key " + args[1][1:-1])
             message += f' in "{args[0]}"'
-
-        if error == "MissingColumnInfo":
-            message = f'missing column info in "{args[0]}"'
 
         if error == "InputFileNotFound":
             message = (f'input file "{args[0]}" '
@@ -105,21 +108,25 @@ class OutputConfigError(Exception):
         if error == "MissingOutputFileInfo":
             message = f'missing output file info in "{args[0]}"'
 
-        if error == "MissingKey":
-            message = "missing "
-            message += ("keys " + args[1] if "," in args[1]
-                        else "key " + args[1][1:-1])
-            message += f' in "{args[0]}"'
-
         if error == "MissingSheetInfo":
             message = f'missing sheet info in "{args[0]}"'
 
         if error == "MissingColumnInfo":
             message = f'missing column info in "{args[0]}"'
 
+        if error == "InvalidColumnInfo":
+            message = f'invalid column info in "{args[0]}"'
+
+        if error == "MissingKey":
+            message = "missing "
+            message += ("keys " + args[1] if "," in args[1]
+                        else "key " + args[1][1:-1])
+            message += f' in "{args[0]}"'
+
         if error == "ColumnNotFound":
-            message = ("columns " + args[1] if ',' in args[1]
-                       else "column " + args[1][1:-1])
-            message += f' cannot be found in "{args[0]}"'
+            message = ("columns " + args[2] if ',' in args[2]
+                       else "column " + args[2][1:-1])
+            message += f' of sheet "{args[1]}" in output file "{args[0]}" '
+            message += "cannot be found in the data from input files"
 
         super().__init__("OutputConfigError: " + message)
