@@ -18,3 +18,6 @@
 - ~~Non-existent columns specified in `from`~~
 - ~~Invalid formats specified in `format`~~
 - ~~Any syntax error~~
+
+## Config | output
+- ~~Handle `format` for dates~~

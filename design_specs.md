@@ -47,5 +47,5 @@
 			- `"type": type of column`
 				- `column|value`
 			- `"format": format of column`
-				- `number-word|string-title|date-month|phone-full"`
+				- `number-word|string-title|date-%Y/%m/%d|phone-full"`
 

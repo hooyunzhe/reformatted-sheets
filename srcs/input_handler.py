@@ -129,14 +129,17 @@ class InputHandler():
             new_columns = {}
             renames = {}
             for column in input_file["columns"]:
-                # custom name and either column to use or custom value
-                if type(column) is dict:
-                    if "from" in column:
-                        columns.append(column["from"])
-                        if column["name"] != column["from"]:
-                            renames[column["from"]] = column["name"]
-                    elif "value" in column:
-                        new_columns[column["name"]] = column["value"]
+                # either take from an existing column or use a custom value
+                if "from" in column:
+                    # for columns that already exist
+                    columns.append(column["from"])
+
+                    # for custom names
+                    if column["name"] != column["from"]:
+                        renames[column["from"]] = column["name"]
+                elif "value" in column:
+                    # for custom values
+                    new_columns[column["name"]] = column["value"]
 
             # read data from input file
             new_data = pd.read_csv(input_path)
@@ -155,7 +158,7 @@ class InputHandler():
 
             # convert date columns based on given format
             for col in input_file["columns"]:
-                if type(col) is dict and "format" in col:
+                if "format" in col:
                     try:
                         new_data[col["name"]] = pd.to_datetime(
                                                 new_data[col["name"]],

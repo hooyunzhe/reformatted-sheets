@@ -7,7 +7,7 @@
 				"range_begin": [2023, 1, 1], "range_end": [2023, 6, 30],
 				"columns":
 				[
-					{ "name": "Date", "from": "Order Date", "format": "day" },
+					{ "name": "Date", "from": "Order Date", "format": "%a" },
 					{ "name": "Amount", "from": "QTY" },
 					{ "name": "Sheet", "value": "Example Sheet One" }
 				]
@@ -16,7 +16,7 @@
 				"range_begin": [2023, 1, 1], "range_end": [2023, 6, 30],
 				"columns":
 				[
-					{ "name": "Date", "from": "Order Date", "format": "month" },
+					{ "name": "Date", "from": "Order Date", "format": "%b" },
 					{ "name": "SKU", "from": "SKU" },
 					{ "name": "Product Name", "from": "Product Name" },
 					{ "name": "Price", "from": "Price" },

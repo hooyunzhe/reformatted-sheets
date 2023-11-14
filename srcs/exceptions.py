@@ -129,4 +129,8 @@ class OutputConfigError(Exception):
             message += f' of sheet "{args[1]}" in output file "{args[0]}" '
             message += "cannot be found in the data from input files"
 
+        if error == "InvalidFormat":
+            message = (f'column \'{args[2]}\' of sheet "{args[1]}" '
+                       f'in output file "{args[0]}" has {args[3]}')
+
         super().__init__("OutputConfigError: " + message)

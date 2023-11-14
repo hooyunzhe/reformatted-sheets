@@ -1,6 +1,7 @@
 import os
 import json
 import pandas as pd
+import numpy as np
 from .exceptions import OutputConfigError
 
 
@@ -19,6 +20,12 @@ class OutputHandler():
             config objects of the output files
         config_filename (str):
             name of the config file
+        current_output_file (object):
+            config object of the output file that's being generated
+        current_sheet (object):
+            config object of the sheet that's being generated
+        current_column (object):
+            config object of the column that's being formatted
     """
 
     def __init__(self, config_filename: str) -> None:
@@ -127,27 +134,49 @@ class OutputHandler():
 
         return f'output_files/{filename}.xlsx'
 
-    def format_output_sheet(self,
-                            data_df: pd.DataFrame,
-                            sheet: any) -> pd.DataFrame:
+    def format_output_column(self, column_series: pd.Series):
+        """
+        Format series for a single column in a sheet based on config
+
+        Arguments:
+            column_series (pd.Series):
+                series containing column to format
+
+        Returns:
+            formatted series for a single column
+        """
+
+        # handle formatting based on the dtype
+        if "format" in self.current_column:
+            if np.issubdtype(column_series.dtype, np.datetime64):
+                # convert date columns based on format
+                return column_series.dt.strftime(
+                                        self.current_column["format"])
+
+        return column_series
+
+    def format_output_sheet(self, data_df: pd.DataFrame) -> pd.DataFrame:
         """
         Format data into a dataframe for a single sheet based on config
 
         Arguments:
             data_df (pd.DataFrame):
                 dataframe containing data to format
-            sheet (object):
-                config object of the sheet
 
         Returns:
             formatted dataframe for a single sheet
         """
 
+        # format and save each column of the current sheet
         sheet_df = pd.DataFrame()
+        for column in self.current_sheet["columns"]:
+            # save config object
+            self.current_column = column
 
-        for column in sheet["columns"]:
+            # either take from a column or use a custom value
             if "from" in column:
-                sheet_df[column["name"]] = data_df[column["from"]]
+                sheet_df[column["name"]] = self.format_output_column(
+                                           data_df[column["from"]])
             elif "value" in column:
                 sheet_df[column["name"]] = column["value"]
 
@@ -166,13 +195,17 @@ class OutputHandler():
                 "ColumnNotFound": the specified columns cannot be found
         """
 
-        print(data_df)
+        # print(data_df)
 
+        # make sure the output folder exists
         if not os.path.isdir("output_files"):
             os.mkdir("output_files")
 
         # format data and generate output for each output file
         for output_file in self.config:
+            # save config object
+            self.current_output_file = output_file
+
             # make sure specified columns exist in the data
             for sheet in output_file["sheets"]:
                 columns_not_found = [col["from"]
@@ -188,10 +221,15 @@ class OutputHandler():
             # get path and open file for writing
             output_path = self.generate_output_path(output_file["filename"])
             with pd.ExcelWriter(output_path) as writer:
-                # format and save data in a dataframe for each sheet
+                # format data and write to output file for each sheet
                 for sheet in output_file["sheets"]:
+                    # save config object
+                    self.current_sheet = sheet
 
-                    sheet_df = self.format_output_sheet(data_df, sheet)
+                    # get formatted dataframe
+                    sheet_df = self.format_output_sheet(data_df)
+
+                    # write to output file
                     sheet_df.to_excel(writer,
                                       sheet_name=sheet["name"],
                                       index=False)
