@@ -4,7 +4,7 @@
 		"sheets":
 		[
 			{	"name": "example_sheet_1", "title": "example_title_1", "type": "sheet",
-				"range_begin": [2023, 1, 1], "range_end": [2023, 6, 30],
+				"range": { "column": "Order Date", "begin": [2023, 4, 1], "end": [2023, 4, 30] },
 				"columns":
 				[
 					{ "name": "Date", "from": "Order Date", "format": "%a" },
@@ -13,7 +13,7 @@
 				]
 			},
 			{	"name": "example_sheet_2", "title": "example_title_2", "type": "sheet",
-				"range_begin": [2023, 1, 1], "range_end": [2023, 6, 30],
+				"range": { "column": "Order Date", "begin": [2023, 1, 1], "end": [2023, 12, 31] },
 				"columns":
 				[
 					{ "name": "Date", "from": "Order Date", "format": "%b" },

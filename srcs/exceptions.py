@@ -111,8 +111,14 @@ class OutputConfigError(Exception):
         if error == "MissingSheetInfo":
             message = f'missing sheet info in "{args[0]}"'
 
+        if error == "MissingRangeInfo":
+            message = f'missing range info in "{args[0]}"'
+
         if error == "MissingColumnInfo":
             message = f'missing column info in "{args[0]}"'
+
+        if error == "InvalidRangeInfo":
+            message = f'invalid range info in "{args[0]}"'
 
         if error == "InvalidColumnInfo":
             message = f'invalid column info in "{args[0]}"'
@@ -126,11 +132,20 @@ class OutputConfigError(Exception):
         if error == "ColumnNotFound":
             message = ("columns " + args[2] if ',' in args[2]
                        else "column " + args[2][1:-1])
-            message += f' of sheet "{args[1]}" in output file "{args[0]}" '
-            message += "cannot be found in the data from input files"
+            message += (f' of sheet "{args[1]}" in output file "{args[0]}" '
+                        "cannot be found in the data from input files")
 
         if error == "InvalidFormat":
             message = (f'column \'{args[2]}\' of sheet "{args[1]}" '
                        f'in output file "{args[0]}" has {args[3]}')
+
+        if error == "DateColumnNotFound":
+            message = (f"'range.column' '{args[2]}' of sheet \"{args[1]}\" "
+                       f'in output file "{args[0]}" '
+                       "cannot be found in the data from input files")
+
+        if error == "InvalidDateColumn":
+            message = (f"'range.column' '{args[2]}' of sheet \"{args[1]}\" "
+                       f'in output file "{args[0]}" doesn\'t have a date type')
 
         super().__init__("OutputConfigError: " + message)

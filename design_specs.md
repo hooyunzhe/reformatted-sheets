@@ -35,10 +35,12 @@
 		- `"type": type of sheet`
 			- `"sheet": columns of type column`
 			- `"pivot": columns of types column and value`
-		- `"range_begin": date to begin in sheet`
-			- `[[year], [month], [day]]`
-		- `"range_end": date to end in sheet`
-			- `[[year], [month], [day]]`
+		- `"range":`
+			- `"column": column for date range filter`
+			- `"begin": date to begin in sheet`
+				- `[[year], [month], [day]]`
+			- `"end": date to end in sheet`
+				- `[[year], [month], [day]]`
 		- `"columns": array of`
 			- `"name": name of column`
 			- `either:`

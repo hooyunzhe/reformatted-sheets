@@ -13,10 +13,20 @@
 		"filename": "example_two.csv",
 		"columns":
 		[
-			{ "name": "Order Date", "from": "Date of Order", "format": "%Y/%m/%d" },
+			{ "name": "Order Date", "from": "Date of Order", "format": "%Y-%m-%d" },
 			{ "name": "SKU", "from": "SKU Number" },
 			{ "name": "QTY", "from": "Quantity" },
 			{ "name": "Origin", "value": "example_two.csv" }
+		]
+	},
+	{
+		"filename": "example_three.csv",
+		"columns":
+		[
+			{ "name": "Order Date", "from": "DOO", "format": "%d/%m/%Y" },
+			{ "name": "SKU", "from": "Product SKU" },
+			{ "name": "QTY", "from": "Product QTY" },
+			{ "name": "Origin", "value": "example_three.csv"}
 		]
 	},
 	{
